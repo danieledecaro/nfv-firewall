@@ -8,7 +8,7 @@ fi
 
 echo $deny
 IFS=';' read -ra ADDR <<< "$deny"
-for i in "$deny"; do
+for i in "$ADDR"; do
     # $i has rule in form src,dest
     IFS=', ' read -ra SRCDST <<< "$i"
     #####IFS=':' read -ra SRCPORT <<< ${SRCDST[0]}
@@ -18,7 +18,7 @@ done
 
 echo $allow
 IFS=';' read -ra ADDR <<< "$allow"
-for i in "$allow"; do
+for i in "$ADDR"; do
     # $i has rule in form src,dest
     IFS=', ' read -ra SRCDST <<< "$i"
     #####IFS=':' read -ra SRCPORT <<< ${SRCDST[0]}
