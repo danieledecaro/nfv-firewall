@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [[ $defaultAction = [Aa][Ll][Ll][Oo][Ww] ]]; then
-    iptables -P FORWARD ACCEPT
-elif [[ $defaultAction = [Dd][Ee][Nn][Yy] ]]; then
-    iptables -P FORWARD REJECT
-fi
-
 echo $deny
 IFS=';' read -ra ADDR <<< "$deny"
 for i in "$ADDR"; do
@@ -13,6 +7,7 @@ for i in "$ADDR"; do
     IFS=', ' read -ra SRCDST <<< "$i"
     #####IFS=':' read -ra SRCPORT <<< ${SRCDST[0]}
     #####IFS=':' read -ra DSTPORT <<< ${SRCDST[1]}
+    echo "iptables -A FORWARD -s ${SRCDST[0]} -d ${SRCDST[1]} -j REJECT"
     iptables -A FORWARD -s "${SRCDST[0]}" -d "${SRCDST[1]}" -j REJECT
 done
 
@@ -23,8 +18,15 @@ for i in "$ADDR"; do
     IFS=', ' read -ra SRCDST <<< "$i"
     #####IFS=':' read -ra SRCPORT <<< ${SRCDST[0]}
     #####IFS=':' read -ra DSTPORT <<< ${SRCDST[1]}
+    echo "iptables -A FORWARD -s ${SRCDST[0]} -d ${SRCDST[1]} -j ACCEPT"
     iptables -A FORWARD -s "${SRCDST[0]}" -d "${SRCDST[1]}" -j ACCEPT
 done
+
+if [[ $defaultAction = [Aa][Ll][Ll][Oo][Ww] ]]; then
+    iptables -t filter -A FORWARD -j ACCEPT
+elif [[ $defaultAction = [Dd][Ee][Nn][Yy] ]]; then
+    iptables -t filter -A FORWARD -j REJECT
+fi
 
 while true; do sleep 15 ; done
 
