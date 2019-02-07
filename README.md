@@ -1,2 +1,2 @@
 # nfv-firewall
-Iptables-based firewall for ETSI MANO NFV Orchestrator
+Iptables-based firewall Docker image for ETSI MANO NFV Orchestrator
